@@ -1,52 +1,77 @@
 import React from 'react';
 import Output from './Output';
+import './App.css';
+import CatTypes from './CatTypes';
 
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       inputText: '',
+      disabled: false,
     };
+    this.myRf = React.createRef()
+
   }
+
+
+  handleFocusInput = () => {
+    this.myRf.current.focus();
+  };
 
   handleChange = (e) => {
-    this.setState({ 
+    this.setState({
       inputText: e.target.value
     });
+
+    if (e.target.value.includes('реакт')) {
+      this.setState({ inputText: e.target.value, disabled: true });
+    } else {
+      this.setState({ inputText: e.target.value, disabled: false });
+    }
+
   }
 
-  handleClear = (e) => {
+  handleSubmit = (e) => {
     e.preventDefault();
+    this.setState({ inputText: '' });
+  };
 
-    this.setState({
-       inputText: '',
-      });
-  }
-  componentDidMount(){
+
+  componentDidMount() {
     console.log('componentDidMount')
   }
 
-  componentDidUpdate(){
+  componentDidUpdate() {
     console.log('componentDiUpdate')
 
   }
 
   render() {
     return (
-      <>
-      <form >
-        <input 
-          type="text"
-          value={this.state.inputText}
-          onChange={this.handleChange}
-        />
-        <button onClick={this.handleClear} type="submit">Отправить</button>
-      </form>
-      <Output inputText={this.state.inputText} />
+      < >
+        <form className='form' onSubmit={this.handleSubmit} >
+          <input
+            ref={this.myRf}
+            type="text"
+            value={this.state.inputText}
+            onChange={this.handleChange}
+          />
+
+          <button
+           type="submit"
+           disabled={this.state.disabled}
+           > 
+           Отправить</button>
+          <button onClick={this.handleFocusInput} type="button">Кнопка для фокуса</button>
+        </form>
+        <Output inputText={this.state.inputText} />
+        <CatTypes/>
       </>
+      
     );
   }
-}
 
+}
 export default App;
